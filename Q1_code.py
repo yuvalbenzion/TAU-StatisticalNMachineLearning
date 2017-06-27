@@ -229,11 +229,15 @@ b_fc1 = bias_variable([1024])
 h_pool2_flat = tf.reshape(h_pool2, [-1, 4*4*64])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
+# dropout layer
+keep_prob = tf.placeholder(tf.float32)
+h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+
 # readout layer
 W_fc2 = weight_variable([1024, 3])
 b_fc2 = bias_variable([3])
 
-y_conv = tf.matmul(h_fc1, W_fc2) + b_fc2
+y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
 
 ############################
@@ -259,11 +263,13 @@ with tf.Session() as sess:
 
 
         if i % 4 == 0:
-          train_accuracy = accuracy.eval(feed_dict={x: batch_xs, y_: batch_ys})
+          train_accuracy = accuracy.eval(feed_dict={x: batch_xs, y_: batch_ys, keep_prob: 1.0})
           print('step %d, training accuracy %g' % (i, train_accuracy))
 
-        train_step.run(feed_dict={x: batch_xs, y_: batch_ys})
+        train_step.run(feed_dict={x: batch_xs, y_: batch_ys, keep_prob: 0.8})
 
-      print('test accuracy %g' % accuracy.eval(feed_dict={x: ndarray_test_x, y_: ndarray_test_y}))
+      print('test accuracy %g' % accuracy.eval(feed_dict={x: ndarray_test_x, y_: ndarray_test_y, keep_prob: 1.0}))
 
-  print sess.run(confusion_matrix, feed_dict={x: ndarray_test_x, y_: ndarray_test_y})
+  print sess.run(confusion_matrix, feed_dict={x: ndarray_test_x, y_: ndarray_test_y, keep_prob: 1.0})
+
+
