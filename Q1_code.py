@@ -4,7 +4,6 @@
 
 import pandas as pd
 import tensorflow as tf
-import numpy as np
 
 #######################
 # read & prepare data #
@@ -161,6 +160,7 @@ for epoc in range (10):
     print('test accuracy %g' % accuracy.eval(feed_dict={x: ndarray_test_x, y_: ndarray_test_y}))
 
 print Deep_model_sess.run(confusion_matrix, feed_dict={x: ndarray_test_x, y_: ndarray_test_y})
+print Deep_model_sess.run(confusion_matrix, feed_dict={x: ndarray_train_x, y_: ndarray_train_y})
 
 
 ######################
@@ -248,7 +248,7 @@ cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-confusion_matrix = tf.contrib.metrics.confusion_matrix(tf.argmax(y_,1), tf.argmax(y_conv,1))
+confusion_matrix = tf.contrib.metrics.confusion_matrix(tf.argmax(y_conv,1), tf.argmax(y_,1))
 
 
 with tf.Session() as sess:
@@ -270,6 +270,7 @@ with tf.Session() as sess:
 
       print('test accuracy %g' % accuracy.eval(feed_dict={x: ndarray_test_x, y_: ndarray_test_y, keep_prob: 1.0}))
 
-  print sess.run(confusion_matrix, feed_dict={x: ndarray_test_x, y_: ndarray_test_y, keep_prob: 1.0})
+    print sess.run(confusion_matrix, feed_dict={x: ndarray_test_x, y_: ndarray_test_y, keep_prob: 1.0})
+    print sess.run(confusion_matrix, feed_dict={x: ndarray_train_x, y_: ndarray_train_y, keep_prob: 1.0})
 
 
