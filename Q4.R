@@ -73,3 +73,59 @@ plot(ridge_norms, main = "Norms values plot - Ridge")
 ########################
 ########################
 
+X.tr.first.100.rows = X.tr[1:100,]
+y.tr.first.100.rows = y.tr[1:100,]
+
+train.first.100.rows = data.frame(X = X.tr.first.100.rows, y = y.tr.first.100.rows)
+
+library(e1071)
+
+svm_model_gamma5 <- svm(y~., data = train.first.100.rows, type = "eps-regression", epsilon = 0, gamma = 5)
+svm_model_gamma0.0001 <- svm(y~., data = train.first.100.rows, type = "eps-regression", epsilon = 0, gamma = 0.0001)
+
+# demonstraiting convergence with exponencial costs (ii)
+cost_vals = exp((-10):(10))
+mean_abs_loss_gamma5 = c()
+mean_abs_loss_gamma0.0001 = c()
+
+for (cost in cost_vals){
+  svm_model_gamma5 <- svm(y~., data = train.first.100.rows, type = "eps-regression", epsilon = 0, gamma = 5, cost = cost)
+  svm_model_gamma0.0001 <- svm(y~., data = train.first.100.rows, type = "eps-regression", epsilon = 0, gamma = 0.0001, cost = cost)
+  
+  pred_gamma5 <- predict(svm_model_gamma5)
+  pred_gamma0.0001 <- predict(svm_model_gamma0.0001)
+  
+  abs_loss_gamma5 = mean(abs(train.first.100.rows$y - pred_gamma5))
+  abs_loss_gamma0.0001 = mean(abs(train.first.100.rows$y - pred_gamma0.0001))
+  
+  mean_abs_loss_gamma5 = append(mean_abs_loss_gamma5, abs_loss_gamma5)
+  mean_abs_loss_gamma0.0001 = append(mean_abs_loss_gamma0.0001, abs_loss_gamma0.0001)
+}
+
+par(mfrow=c(3,1))
+plot(log(cost_vals), main = "log(cost) values")
+plot(mean_abs_loss_gamma5, main = "MAE: gamma = 5")
+plot(mean_abs_loss_gamma0.0001, main = "MAE: gamma = 0.0001")
+
+
+# approximating interpolating models for cost = exp(15) (iii)
+
+svm_model_gamma5_cost_e15 <- svm(y~., data = train.first.100.rows, type = "eps-regression", epsilon = 0, gamma = 5, cost = exp(15))
+svm_model_gamma0.0001_cost_e15 <- svm(y~., data = train.first.100.rows, type = "eps-regression", epsilon = 0, gamma = 0.0001, cost = exp(15))
+
+new_data <- rep(5, 99)
+train.first.100.rows_plus_555 <- rbind(train.first.100.rows, new_data)
+new_data <- train.first.100.rows_plus_555[101,]
+
+pred_gamma5 = predict(svm_model_gamma5_cost_e15, newdata = new_data)
+pred_gamma0.0001 = predict(svm_model_gamma0.0001_cost_e15, newdata = new_data)
+pred_gamma5
+pred_gamma0.0001
+
+
+
+
+
+
+
+
