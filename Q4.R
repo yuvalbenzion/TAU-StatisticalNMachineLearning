@@ -118,7 +118,7 @@ new_data <- rep(5, 99)
 train.first.100.rows_plus_555 <- rbind(train.first.100.rows, new_data)
 new_data <- train.first.100.rows_plus_555[101,]
 
-# calc predictions from the interpolation point (5,5,...5)
+# calc predictions for the extrapolation point (5,5,...5)
 pred_gamma5 = predict(svm_model_gamma5_cost_e15, newdata = new_data)
 pred_gamma0.0001 = predict(svm_model_gamma0.0001_cost_e15, newdata = new_data)
 pred_gamma5
