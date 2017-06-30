@@ -38,7 +38,7 @@ RSSs_lasso = apply(resids_lasso^2, 2, sum) # calculate RSSs
 lambdas_lasso = as.numeric(sapply (mods_lasso, "[",5)) # extract lambdas (for Norm calculation)
 
 abs_coef_lasso <- abs(coefficients(mods_lasso))
-lasso_norms <- rowSums(abs_coef_lasso) * lambdas_lasso # calculate L1 norms
+lasso_norms <- rowSums(abs_coef_lasso) # calculate L1 norms
 
 # plot the RSSs and the norms for each of the lambdas
 par(mfrow=c(2,1))
@@ -59,7 +59,7 @@ resids_ridge = matrix (data=train.first.50.rows$y, nrow=dim(preds_ridge)[1], nco
 RSSs_ridge = apply (resids_ridge^2, 2, sum) # calculate RSSs
 
 ridge_squared <- mods_ridge$coef^2
-ridge_norms <- colSums(ridge_squared) * lambda.vals # calculate L2 norms
+ridge_norms <- colSums(ridge_squared)  # calculate L2 norms
 
 # plot the RSSs and the norms for each of the lambdas
 par(mfrow=c(2,1))
@@ -123,9 +123,6 @@ pred_gamma5 = predict(svm_model_gamma5_cost_e15, newdata = new_data)
 pred_gamma0.0001 = predict(svm_model_gamma0.0001_cost_e15, newdata = new_data)
 pred_gamma5
 pred_gamma0.0001
-
-
-
 
 
 
