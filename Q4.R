@@ -45,6 +45,15 @@ par(mfrow=c(2,1))
 plot(RSSs_lasso, main = "RSS plot - LASSO")
 plot(lasso_norms, main = "Norms values plot - LASSO")
 
+
+library(glmnet)
+lambda.vals = exp(seq(-15,10,by=0.1))
+
+lasso_model_for_i = glmnet(x = as.matrix(train.first.50.rows[,1:99]), y = as.numeric(train.first.50.rows[,100]), family = "gaussian", lambda = lambda.vals, alpha = 1, nlambda = 1)
+lasso_norms <- colSums(abs(coef(lasso_model_for_i)))
+table(lasso_norms-ridge_norms) # all values are >0 --> meaning that for each lambda value the norm of lower order (lasso) is greater than the norm of higher order (ridge)
+
+
 ########################
 # for Ridge regression #
 ########################
