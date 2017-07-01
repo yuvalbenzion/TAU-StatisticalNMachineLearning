@@ -45,7 +45,7 @@ par(mfrow=c(2,1))
 plot(RSSs_lasso, main = "RSS plot - LASSO")
 plot(lasso_norms, main = "Norms values plot - LASSO")
 
-
+# this cose is for section g-2
 library(glmnet)
 lambda.vals = exp(seq(-15,10,by=0.1))
 
