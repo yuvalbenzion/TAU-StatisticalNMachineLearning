@@ -37,7 +37,7 @@ resids_lasso = apply(preds_lasso, 2, "-", train.first.50.rows$y) # calculate res
 RSSs_lasso = apply(resids_lasso^2, 2, sum) # calculate RSSs
 lambdas_lasso = as.numeric(sapply (mods_lasso, "[",5)) # extract lambdas (for Norm calculation)
 
-abs_coef_lasso <- abs(coefficients(mods_lasso))
+abs_coef_lasso <- abs(coefficients(mods_lasso)[,-1])
 lasso_norms <- rowSums(abs_coef_lasso) # calculate L1 norms
 
 # plot the RSSs and the norms for each of the lambdas
@@ -50,9 +50,8 @@ library(glmnet)
 lambda.vals = exp(seq(-15,10,by=0.1))
 
 lasso_model_for_i = glmnet(x = as.matrix(train.first.50.rows[,1:99]), y = as.numeric(train.first.50.rows[,100]), family = "gaussian", lambda = lambda.vals, alpha = 1, nlambda = 1)
-lasso_norms <- colSums(abs(coef(lasso_model_for_i)))
-table(lasso_norms-ridge_norms) # all values are >0 --> meaning that for each lambda value the norm of lower order (lasso) is greater than the norm of higher order (ridge)
-
+lasso_norms_g2 <- colSums(abs(coef(lasso_model_for_i)[-1,]))
+plot(lasso_norms_g2-ridge_norms) 
 
 ########################
 # for Ridge regression #
